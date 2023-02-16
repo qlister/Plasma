@@ -4,6 +4,7 @@ from plasma import plasma2040
 from pimoroni import RGBLED, Button, Analog
 import halloween
 import xmas
+import spring
 import PlasmaLED
 from PlasmaLED import POLL_DELAY_MS, TENTH_SEC, ONE_SEC
 
@@ -41,14 +42,21 @@ while True:
     if button_a.read():
         while button_a.read():
             pass
-        if fn == 1:
-            del led_function
-            led_function = xmas.xmas( LEDs )
-            fn = 0
-        else:
-            del led_function
-            led_function = halloween.halloween( LEDs )
-            fn = 1
+        del led_function
+        led_function = xmas.xmas( LEDs )
+
+    if button_b.read():
+        while button_b.read():
+            pass
+        del led_function
+        led_function =  halloween.halloween( LEDs )
+    if button_boot.read():
+        while button_boot.read():
+            pass
+        del led_function
+        led_function = spring.spring( LEDs )
+
+
     led_function.poll()
     machine.lightsleep( POLL_DELAY_MS )
         
