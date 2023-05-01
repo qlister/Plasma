@@ -5,9 +5,37 @@ from pimoroni import RGBLED, Button, Analog
 import halloween
 import xmas
 import spring
+import daffodils
+import bluebells
 import PlasmaLED
 from PlasmaLED import POLL_DELAY_MS, TENTH_SEC, ONE_SEC
+import ujson
 
+#setting = 'Xmas'
+#g = open('settings.txt', 'w')
+#ujson.dump( setting, g )
+#g.close
+
+settings = [ "Xmas", "Halloween", "Spring", "Daffodils", "Bluebells"]
+
+g = open('settings.txt', 'r')
+setting = ujson.load( g )
+print ( setting )
+g.close()
+
+def changeSetting(setting):
+    
+    for x in range(len(settings)):
+        if settings[x] == setting:
+            x = x+1
+            if x >= len(settings):
+                x = 0
+            break
+    setting = settings[x]
+    g = open('settings.txt', 'w')
+    ujson.dump( setting, g )
+    print("Setting ", setting)
+    return setting
 
 NUM_LEDS = 50
 
@@ -38,24 +66,45 @@ CURRENT_COUNT = 5 * ONE_SEC
 
 current_count = CURRENT_COUNT
 
+Change = True
+
 while True:
+    
+    if Change == True:
+        Change = False
+        if setting == "Xmas":
+            del led_function
+            led_function = xmas.xmas( LEDs )
+        elif setting == "Halloween":
+            del led_function
+            led_function =  halloween.halloween( LEDs )
+        elif setting == "Spring":
+            del led_function
+            led_function = spring.spring( LEDs )
+        elif setting == "Daffodils":
+            del led_function
+            led_function = daffodils.daffodils( LEDs )
+        elif setting == "Bluebells":
+            del led_function
+            led_function = bluebells.bluebells( LEDs )
+        
     if button_a.read():
         while button_a.read():
             pass
-        del led_function
-        led_function = xmas.xmas( LEDs )
+        Change = True
+        setting = changeSetting(setting)
 
     if button_b.read():
         while button_b.read():
             pass
-        del led_function
-        led_function =  halloween.halloween( LEDs )
+        Change = True
+        setting = changeSetting(setting)
+
     if button_boot.read():
         while button_boot.read():
             pass
-        del led_function
-        led_function = spring.spring( LEDs )
-
+        Change = True
+        setting = changeSetting(setting)
 
     led_function.poll()
     machine.lightsleep( POLL_DELAY_MS )
@@ -66,3 +115,4 @@ while True:
         print("Current =", sense.read_current(), "A")
 
 
+    
