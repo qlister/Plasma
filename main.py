@@ -20,7 +20,7 @@ settings = [ "Xmas", "Halloween", "Spring", "Daffodils", "Bluebells"]
 
 g = open('settings.txt', 'r')
 setting = ujson.load( g )
-print ( setting )
+print ( 'Read setting from file:', setting )
 g.close()
 
 def changeSetting(setting):
@@ -34,7 +34,7 @@ def changeSetting(setting):
     setting = settings[x]
     g = open('settings.txt', 'w')
     ujson.dump( setting, g )
-    print("Setting ", setting)
+    print("Setting changed to: ", setting)
     return setting
 
 NUM_LEDS = 50

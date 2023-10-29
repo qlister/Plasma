@@ -36,12 +36,14 @@ ORANGES=[ DIM_ORANGE, BURNT_ORANGE, MAHOGANY, RED ]
 SPRING=[ SKY_BLUE, GRASS_GREEN, DAFF_YELLOW, SALMON_PINK ]
 DIM_SPRING = SPRING
 
+print( 'Spring' )
 print (SPRING)
 
 for x in range(len(SPRING)):
     for y in range(len(SPRING[x])):
         DIM_SPRING[x][y] = SPRING[x][y] * 0.6
         
+print( 'Dim Spring' )
 print (DIM_SPRING)
 
 class spring:

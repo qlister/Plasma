@@ -25,6 +25,8 @@ RED_ORANGE = [255, 68, 51]
 DIM_ORANGE = [150, 83, 0]
 
 ORANGES=[ DIM_ORANGE, BURNT_ORANGE, MAHOGANY, RED ]
+print ('Halloween')        
+print (ORANGES)
 
 class halloween:
     

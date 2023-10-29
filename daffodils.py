@@ -3,7 +3,7 @@ import machine
 from plasma import plasma2040
 from pimoroni import RGBLED, Button
 import time
-from random import randrange
+from random import randrange, random
 import PlasmaLED
 from PlasmaLED import POLL_DELAY_MS, TENTH_SEC, ONE_SEC
 
@@ -24,7 +24,7 @@ MAHOGANY = [192, 64, 0]
 RED_ORANGE = [255, 68, 51]
 DIM_ORANGE = [150, 83, 0]
 
-DAFFODIL_YELLOW = [ 255, 255, 49 ]
+DAFFODIL_YELLOW = [ 255, 255, 0 ]
 DAFFODIL_ORANGE = [ 255, 204, 49 ]
 DAFFODIL_STALK = [ 30, 255, 30 ]
 
@@ -34,17 +34,11 @@ GRASS_GREEN = [0xb6, 0xd8, 0x74]
 DAFF_YELLOW = [0xf8, 0xcc, 0x3a] 
 SALMON_PINK = [0xf4, 0x7c, 0x71]
 
-DAFFODILS = [DAFFODIL_YELLOW, DAFFODIL_ORANGE, DAFFODIL_STALK]
-
-DIM_DAFFODILS = DAFFODILS
-
-print (DAFFODILS)
-
-for x in range(len(DAFFODILS)):
-    for y in range(len(DAFFODILS[x])):
-        DIM_DAFFODILS[x][y] = DAFFODILS[x][y] * 0.6
-        
-print (DIM_DAFFODILS)
+DAFFODILS = [   [ PALE_BLUE, 0.6, 0.01 ]
+              , [ RED, 0.6, 0.01 ]
+              , [ DAFFODIL_STALK, 0.6, 0.28 ]
+              , [ DAFFODIL_YELLOW, 0.8, 0.70 ]
+            ]
 
 class daffodils:
     
@@ -55,9 +49,14 @@ class daffodils:
         self.LEDs = LEDs
 #        print("initialising with", self.led_count, "LEDs")
         for i in range( self.led_count ):
-            LEDs[i].init_fade( DIM_DAFFODILS[2], DIM_DAFFODILS[1], randrange( TENTH_SEC * 3, TENTH_SEC * 4), 0 )
-        self.count = randrange(3,20)     
-
+            LEDs[i].init_fade( DAFFODILS[0][0], DAFFODILS[0][0], randrange( TENTH_SEC * 3, TENTH_SEC * 4), 0 )
+        self.count = randrange(3,20)
+        for j in range( len(DAFFODILS) ):
+            print( j )
+            DAFFODILS[j][0][0] = int(DAFFODILS[j][0][0] * DAFFODILS[j][1])
+            DAFFODILS[j][0][1] = int(DAFFODILS[j][0][1] * DAFFODILS[j][1])
+            DAFFODILS[j][0][2] = int(DAFFODILS[j][0][2] * DAFFODILS[j][1])
+            
     def poll(self):
 
         # This polls each LED and if the colour needs to be set then it sets it
@@ -69,7 +68,17 @@ class daffodils:
                 from_colour, to_colour = self.LEDs[i].get_fade()
                 # init the fade with the start as the end colour of the previous fade
                 # the end colour is a random selection from our array and the fade time is random
-                self.LEDs[i].init_fade( to_colour, DIM_DAFFODILS[ randrange(0,len(DIM_DAFFODILS)) ], randrange( TENTH_SEC * 3, ONE_SEC ), 0 )
+                rnd = random()
+                accum = 0.0
+                for j in range( len(DAFFODILS) ):
+                    accum = accum + DAFFODILS[j][2]
+                    if ( accum > rnd ):
+                        from_colour = DAFFODILS[j][0]
+                        break
+                if j == len(DAFFODILS):
+                    print( "OOPS! We didn't select a colour" )
+                
+                self.LEDs[i].init_fade( to_colour, from_colour, randrange( TENTH_SEC * 3, ONE_SEC ), 0 )
 
 
 

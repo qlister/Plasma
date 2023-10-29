@@ -41,12 +41,13 @@ BLUEBELLS = [BLUEBELL_BLUE, BLUEBELL_BLUE2, BLUEBELL_STALK]
 
 DIM_BLUEBELLS = BLUEBELLS
 
+print ('Bluebells')        
 print (BLUEBELLS)
 
 for x in range(len(BLUEBELLS)):
     for y in range(len(BLUEBELLS[x])):
         DIM_BLUEBELLS[x][y] = BLUEBELLS[x][y] * 0.6
-        
+print ('Dim Bluebells')        
 print (DIM_BLUEBELLS)
 
 class bluebells:
