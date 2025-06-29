@@ -1,11 +1,6 @@
-import plasma
-import machine
-from plasma import plasma2040
-from pimoroni import RGBLED, Button
-import time
 from random import randrange
 import PlasmaLED
-from PlasmaLED import POLL_DELAY_MS, TENTH_SEC, ONE_SEC
+from PlasmaLED import UPDATES
 
 RED = [255, 0, 0]
 GREEN = [0, 255, 0]
@@ -23,7 +18,6 @@ BRIGHT_ORANGE = [255, 172, 28]
 MAHOGANY = [192, 64, 0]
 RED_ORANGE = [255, 68, 51]
 DIM_ORANGE = [150, 83, 0]
-
 
 PALE_BLUE = [0xbe, 0xe3, 0xf3]
 SKY_BLUE = [0x2d, 0xc2, 0xd2]
@@ -55,7 +49,7 @@ class spring:
         self.LEDs = LEDs
 #        print("initialising with", self.led_count, "LEDs")
         for i in range( self.led_count ):
-            LEDs[i].init_fade( DIM_SPRING[3], DIM_SPRING[1], randrange( TENTH_SEC * 3, TENTH_SEC * 4), 0 )
+            self.LEDs[i].init_fade( DIM_SPRING[3], DIM_SPRING[1], randrange( int(UPDATES*3/10), int(UPDATES*4/10)), 0 )
         self.count = randrange(3,20)     
 
     def poll(self):
@@ -69,13 +63,5 @@ class spring:
                 from_colour, to_colour = self.LEDs[i].get_fade()
                 # init the fade with the start as the end colour of the previous fade
                 # the end colour is a random selection from our array and the fade time is random
-                self.LEDs[i].init_fade( to_colour, SPRING[ randrange(0,len(SPRING)) ], randrange( TENTH_SEC * 3, ONE_SEC ), 0 )
-
-
-
-
-        
-            
-
-
+                self.LEDs[i].init_fade( to_colour, SPRING[randrange(0,len(SPRING))], randrange( int(UPDATES*3/10), UPDATES), 0 )
 

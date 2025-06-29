@@ -1,11 +1,11 @@
 import plasma
 import machine
-from plasma import plasma2040
+#from plasma import plasma2040
 from pimoroni import RGBLED, Button
 import time
 from random import randrange
 import PlasmaLED
-from PlasmaLED import POLL_DELAY_MS, TENTH_SEC, ONE_SEC
+from PlasmaLED import UPDATES
 
 RED = [255, 0, 0]
 ORANGE = [255, 165, 0]
@@ -31,13 +31,13 @@ class xmas:
             else:
                 col = DIM_GREEN
             LEDs[i].set_colour( col )
-        self.count = randrange( TENTH_SEC*1,TENTH_SEC*4 ) 
+        self.count = randrange( int(UPDATES/10), int(UPDATES*4/10) ) 
 
     def poll(self):
         self.count -= 1
         if self.count == 0:
-            self.count = randrange( TENTH_SEC*1,TENTH_SEC*4 )
-            self.LEDs[randrange(self.led_count)].flash( WHITE, TENTH_SEC * 1 )
+            self.count = randrange( int(UPDATES/10), int(UPDATES*4/10) )
+            self.LEDs[randrange(self.led_count)].flash( WHITE, int(UPDATES/15) )
         for i in range( self.led_count ):
             self.LEDs[i].poll()
 

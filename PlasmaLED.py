@@ -1,6 +1,9 @@
 
 
+UPDATES = 60			# updates per second
+
 POLL_DELAY_MS = 50    # in ms
+
 TENTH_SEC = int( 1000 / POLL_DELAY_MS / 10 )
 ONE_SEC = int( 1000 / POLL_DELAY_MS )
 TWO_SEC = int( 2000 / POLL_DELAY_MS )

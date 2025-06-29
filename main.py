@@ -1,6 +1,6 @@
 import plasma
+import time
 import machine
-from plasma import plasma2040
 from pimoroni import RGBLED, Button, Analog
 import halloween
 import xmas
@@ -8,13 +8,15 @@ import spring
 import daffodils
 import bluebells
 import PlasmaLED
-from PlasmaLED import POLL_DELAY_MS, TENTH_SEC, ONE_SEC
 import ujson
+from PlasmaLED import UPDATES
 
-#setting = 'Xmas'
-#g = open('settings.txt', 'w')
-#ujson.dump( setting, g )
-#g.close
+
+# Magic values for Plasma 2040 current sense
+# 3A * 0.015Ω = 0.045V
+# 0.045V * 50 (gain) = 2.25V maximum
+ADC_GAIN = 50
+SHUNT_RESISTOR = 0.015
 
 settings = [ "Xmas", "Halloween", "Spring", "Daffodils", "Bluebells"]
 
@@ -39,16 +41,17 @@ def changeSetting(setting):
 
 NUM_LEDS = 50
 
-led = RGBLED(plasma2040.LED_R, plasma2040.LED_G, plasma2040.LED_B)
+led = RGBLED("LED_R", "LED_G", "LED_B")
 led.set_rgb(0, 0, 0)
 
-button_a = Button(plasma2040.BUTTON_A)
-button_b = Button(plasma2040.BUTTON_B)
-button_boot = Button(plasma2040.USER_SW)
+button_a = Button("BUTTON_A", repeat_time=0)
+button_b = Button("BUTTON_B", repeat_time=0)
+button_boot = Button("USER_SW", repeat_time=0)
 
-sense = Analog(plasma2040.CURRENT_SENSE, plasma2040.ADC_GAIN, plasma2040.SHUNT_RESISTOR)
+sense = Analog("CURRENT_SENSE", ADC_GAIN, SHUNT_RESISTOR)
 
-led_strip = plasma.WS2812(NUM_LEDS, 0, 0, plasma2040.DAT)
+# WS2812 / NeoPixel™ LEDs
+led_strip = plasma.WS2812(NUM_LEDS)
 
 led_strip.start()
 
@@ -58,13 +61,11 @@ for i in range(NUM_LEDS):
     LEDs.append( PlasmaLED.LED( col, led_strip, i ) )    # set the default colour
 
 #led_function = halloween.halloween( LEDs )
-led_function = xmas.xmas( LEDs )
+led_function = bluebells.bluebells( LEDs )
 
 fn = 0
 
-CURRENT_COUNT = 5 * ONE_SEC
-
-current_count = CURRENT_COUNT
+current_count = 0
 
 Change = True
 
@@ -107,11 +108,12 @@ while True:
         setting = changeSetting(setting)
 
     led_function.poll()
-    machine.lightsleep( POLL_DELAY_MS )
+    #machine.lightsleep( POLL_DELAY_MS )	# This caused the LEDs to flash...!!!
+    time.sleep(1.0 / UPDATES)
         
-    current_count -= 1
-    if current_count == 0:
-        current_count = CURRENT_COUNT
+    current_count += 1
+    if current_count > UPDATES:		# Print the current once per second
+        current_count = 0
         print("Current =", sense.read_current(), "A")
 
 

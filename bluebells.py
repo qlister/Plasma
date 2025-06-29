@@ -1,11 +1,6 @@
-import plasma
-import machine
-from plasma import plasma2040
-from pimoroni import RGBLED, Button
-import time
 from random import randrange
 import PlasmaLED
-from PlasmaLED import POLL_DELAY_MS, TENTH_SEC, ONE_SEC
+from PlasmaLED import UPDATES
 
 RED = [255, 0, 0]
 GREEN = [0, 255, 0]
@@ -59,7 +54,7 @@ class bluebells:
         self.LEDs = LEDs
 #        print("initialising with", self.led_count, "LEDs")
         for i in range( self.led_count ):
-            LEDs[i].init_fade( DIM_BLUEBELLS[2], DIM_BLUEBELLS[1], randrange( TENTH_SEC * 3, TENTH_SEC * 4), 0 )
+            LEDs[i].init_fade( DIM_BLUEBELLS[2], DIM_BLUEBELLS[1], randrange( int(UPDATES*3/10), UPDATES ), 0 )
         self.count = randrange(3,20)     
 
     def poll(self):
@@ -73,7 +68,7 @@ class bluebells:
                 from_colour, to_colour = self.LEDs[i].get_fade()
                 # init the fade with the start as the end colour of the previous fade
                 # the end colour is a random selection from our array and the fade time is random
-                self.LEDs[i].init_fade( to_colour, DIM_BLUEBELLS[ randrange(0,len(DIM_BLUEBELLS)) ], randrange( TENTH_SEC * 3, ONE_SEC ), 0 )
+                self.LEDs[i].init_fade( to_colour, DIM_BLUEBELLS[ randrange(0,len(DIM_BLUEBELLS)) ], randrange( int(UPDATES*3/10), UPDATES ), 0 )
 
 
 
