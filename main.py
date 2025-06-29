@@ -5,6 +5,7 @@ from pimoroni import RGBLED, Button, Analog
 import halloween
 import xmas
 import spring
+import summer
 import daffodils
 import bluebells
 import PlasmaLED
@@ -18,7 +19,7 @@ from PlasmaLED import UPDATES
 ADC_GAIN = 50
 SHUNT_RESISTOR = 0.015
 
-settings = [ "Xmas", "Halloween", "Spring", "Daffodils", "Bluebells"]
+settings = [ "Xmas", "Halloween", "Spring", "Daffodils", "Bluebells", "Summer"]
 
 g = open('settings.txt', 'r')
 setting = ujson.load( g )
@@ -61,12 +62,10 @@ for i in range(NUM_LEDS):
     LEDs.append( PlasmaLED.LED( col, led_strip, i ) )    # set the default colour
 
 #led_function = halloween.halloween( LEDs )
-led_function = bluebells.bluebells( LEDs )
+led_function = None
 
 fn = 0
-
 current_count = 0
-
 Change = True
 
 while True:
@@ -88,6 +87,9 @@ while True:
         elif setting == "Bluebells":
             del led_function
             led_function = bluebells.bluebells( LEDs )
+        elif setting == "Summer":
+            del led_function
+            led_function = summer.summer( LEDs )
         
     if button_a.read():
         while button_a.read():
